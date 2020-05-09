@@ -1,0 +1,52 @@
+﻿@using ToDoList.Repository
+@using ToDoList.Data.Entity
+@page "/delete/{id:int}"
+@inject IEmployeeRepository empolyService
+@inject NavigationManager NavigationManager
+
+<h1>刪除資料</h1>
+<p style="color:red;text-align:center">你確定要刪除資料嗎？</p>
+
+<table class="editform">
+    <tr>
+        <td>員工姓名:</td>
+        <td>@emp.Name</td>
+    </tr>
+    <tr>
+        <td>員工國家:</td>
+        <td>@emp.Country</td>
+    </tr>
+    <tr>
+        <td colspan="2" style="text-align:center">
+            <input type="button" value="Delete" @onclick="@DeleteData" />
+            <input type="button" value="Cancel" @onclick="@Cancel" />
+        </td>
+    </tr>
+</table>
+
+
+@code {
+    // Create a new, empty Video object
+    Employees emp = new Employees();
+
+    [Parameter]
+    public int id { get; set; }
+
+    //Executes on page open..
+    protected override async Task OnInitializedAsync()
+    {
+        emp = await empolyService.GetEmployeeById(id);
+    }
+
+    protected async Task DeleteData()
+    {
+        // Insert if id is zero.
+        await empolyService.DeleteEmployee(id);
+        NavigationManager.NavigateTo("/list");
+    }
+    void Cancel()
+    {
+        NavigationManager.NavigateTo("/list");
+    }
+
+}

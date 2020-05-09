@@ -1,0 +1,20 @@
+﻿@page "/"
+@using ToDoList.Data;
+@using ToDoList.DTO;
+
+<h1>Blazor AutoMapper Example</h1>
+<button class="btn btn-primary" @onclick="GetDtoObject">Click</button>
+<label>Student ID:</label><span>@studentDTO.StudentID</span>
+<hr />
+<label>Student Name:</label><span>@studentDTO.Name</span>
+<hr />
+<label>Student Rool:</label><span>@studentDTO.Roll</span>
+<hr />
+@code   {
+    Student student = new Student();
+    StudentDTO studentDTO = new StudentDTO();
+    public void GetDtoObject()
+    {
+        studentDTO = student.GetStudentDTOObject();
+    }
+}

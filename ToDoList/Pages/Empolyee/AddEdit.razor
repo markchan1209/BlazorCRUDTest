@@ -1,0 +1,77 @@
+﻿@using ToDoList.Repository
+@using ToDoList.Data.Entity
+@page "/addedit/{id:int}"
+@inject IEmployeeRepository empolyService
+@inject NavigationManager NavigationManager
+
+<h1>@pagetitle</h1>
+
+<EditForm Model="@emp" OnValidSubmit="@EmpolyeeSave">
+    <table class="editform">
+        <tr>
+            <td>員工姓名</td>
+            <td><input type="text" @bind="emp.Name" required /></td>
+        </tr>
+         <tr>
+            <td>員工國家</td>
+            <td><input type="text" @bind="emp.Country" required /></td>
+        </tr>
+         <tr>
+            <td>員工地區</td>
+            <td><input type="text" @bind="emp.Gender" required /></td>
+        </tr>
+        <tr>
+            <td colspan="2" style="text-align:center">
+                <input type="submit" value="@buttontext" />
+                <input type="button" value="Cancel" @onclick="@Cancel" />
+            </td>
+        </tr>
+    </table>
+
+
+</EditForm>
+
+@code {
+    Employees emp = new Employees();
+
+    [Parameter]
+    public int id { get; set; }
+
+    public string pagetitle = "新增資料";
+    public string buttontext = "新增";
+
+    //Executes on page open, set defaults on page.
+    protected override async Task OnInitializedAsync()
+    {
+        // ============ If the passed-in id is zero, assume new Video.
+        if (id == 0)
+        {
+           
+        }
+        else
+        {
+            emp = await empolyService.GetEmployeeById(id);
+            pagetitle = "修改資料";
+            buttontext = "修改";
+        }
+    }
+
+    protected async Task EmpolyeeSave()
+    {
+        if (emp.EmployeeID == 0)
+        {
+            // Insert if id is zero.
+            await empolyService.Create(emp);
+        }
+        else
+        {
+            // Update if id not 0
+            await empolyService.UpdateEmployee(emp);
+        }
+        NavigationManager.NavigateTo("/list");
+    }
+    void Cancel()
+    {
+        NavigationManager.NavigateTo("/list");
+    }
+}

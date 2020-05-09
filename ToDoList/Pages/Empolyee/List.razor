@@ -1,0 +1,61 @@
+﻿@using ToDoList.Repository
+@using ToDoList.Data.Entity
+@page "/list"
+@inject IEmployeeRepository empolyeeService
+
+<h3>員工 清單</h3>
+<p>
+    <!-- Calling videoaddedit with id of zero configures page for Insert -->
+    <a href="/addedit/0">新增資料</a>
+</p>
+@if (empolyees == null)
+{
+    <p style="text-align:center">
+        <img src="../images/loader.gif" />
+    </p>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">員工編號</th>
+                <th scope="col">員工姓名</th>
+                <th scope="col">國家</th>
+                <th scope="col">地區</th>
+                <th scope="col">性別</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var emp in empolyees)
+            {
+                <tr>
+                    <td>
+                        <a href="addedit/@emp.EmployeeID">
+                            <img width="50px" height="50px" src="../images/iEdit.png" />
+                        </a>
+                    </td>
+                    <td>@emp.Name</td>
+                    <td>@emp.Country</td>
+                    <td>@emp.Gender</td>
+                    <td>
+                        <a href="delete/@emp.EmployeeID">
+                            <img width="50px" height="50px" src="../images/iTrash.png" alt="Delete" title="Delete" />
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+
+    IEnumerable<Employees> empolyees;
+
+    protected override async Task OnInitializedAsync()
+    {
+        //Populate the list of video objects from the Video table.
+        empolyees = await empolyeeService.GetEmployees();
+    }
+}
