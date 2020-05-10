@@ -1,14 +1,14 @@
 ﻿@using ToDoList.Repository
 @using ToDoList.Data.Entity
 @page "/list"
-@inject IEmployeeRepository empolyeeService
+@inject IEmployeeRepository _empolyeeService
 
 <h3>員工 清單</h3>
 <p>
     <!-- Calling videoaddedit with id of zero configures page for Insert -->
     <a href="/addedit/0">新增資料</a>
 </p>
-@if (empolyees == null)
+@if (_emp == null)
 {
     <p style="text-align:center">
         <img src="../images/loader.gif" />
@@ -27,7 +27,7 @@ else
             </tr>
         </thead>
         <tbody>
-            @foreach (var emp in empolyees)
+            @foreach (var emp in _emp)
             {
                 <tr>
                     <td>
@@ -51,11 +51,11 @@ else
 
 @code {
 
-    IEnumerable<Employees> empolyees;
+    IEnumerable<Employees> _emp;
 
     protected override async Task OnInitializedAsync()
     {
         //Populate the list of video objects from the Video table.
-        empolyees = await empolyeeService.GetEmployees();
+        _emp = await _empolyeeService.GetEmployees();
     }
 }
