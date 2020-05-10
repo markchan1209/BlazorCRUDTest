@@ -1,20 +1,43 @@
 ﻿@page "/"
-@using ToDoList.Data;
-@using ToDoList.DTO;
+@using ToDoList.Services;
+@inject IFileUpload FileUpload;
 
-<h1>Blazor AutoMapper Example</h1>
-<button class="btn btn-primary" @onclick="GetDtoObject">Click</button>
-<label>Student ID:</label><span>@studentDTO.StudentID</span>
-<hr />
-<label>Student Name:</label><span>@studentDTO.Name</span>
-<hr />
-<label>Student Rool:</label><span>@studentDTO.Roll</span>
-<hr />
-@code   {
-    Student student = new Student();
-    StudentDTO studentDTO = new StudentDTO();
-    public void GetDtoObject()
+<h1>Blazor Upload File</h1>
+
+<InputFile multiple OnChange="HandleFileSelected"></InputFile>
+
+<table class="table table-bordered" style="margin-top:10%;"></table>
+<thead>
+    <tr>
+        <th>File Name</th>
+        <th>File Size</th>
+        <th>File Type</th>
+    </tr>
+</thead>
+<tbody>
+    @if (files != null && files.Count > 0)
     {
-        studentDTO = student.GetStudentDTOObject();
+        foreach (var fileitem in files)
+        {
+            <tr>
+                <td>@fileitem.Name </td>
+                <td>@fileitem.Size</td>
+                <td>@fileitem.Type</td>
+            </tr>
+        }
+    }
+</tbody>
+@code {
+    List<IFileListEntry> files = new List<IFileListEntry>();
+    async Task HandleFileSelected(IFileListEntry[] filelistEntries)
+    {
+        files = new List<IFileListEntry>();
+        foreach (var file in filelistEntries)
+        {
+            if (file != null)
+                await FileUpload.Upload(file);
+
+            files.Add(file);
+        }
     }
 }

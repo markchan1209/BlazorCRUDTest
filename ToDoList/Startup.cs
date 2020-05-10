@@ -12,6 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using ToDoList.Data;
 using ToDoList.Repository;
+using ToDoList.Services;
 
 namespace ToDoList
 {
@@ -32,11 +33,12 @@ namespace ToDoList
             services.AddServerSideBlazor();
             services.AddSingleton<WeatherForecastService>();
             services.AddSingleton<IConfiguration>(Configuration);
-            services.AddScoped<IEmployeeRepository,EmployeeServiceDapper>();
+            services.AddScoped<IEmployeeRepository, EmployeeServiceDapper>();
             services.AddDbContext<EfDbContext>(options =>
             {
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
             });
+            services.AddScoped<IFileUpload, FileUpload>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
